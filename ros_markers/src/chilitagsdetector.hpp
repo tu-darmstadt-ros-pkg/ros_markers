@@ -12,12 +12,9 @@
 #include <tf/transform_broadcaster.h>
 #include <image_transport/image_transport.h>
 #include <image_geometry/pinhole_camera_model.h>
+#include <camera_info_manager/camera_info_manager.h>
 #include <cv_bridge/cv_bridge.h>
-
-#ifdef WITH_KNOWLEDGE
-#include <liboro/oro.h>
-#include <liboro/socket_connector.h>
-#endif
+#include <hector_worldmodel_msgs/PosePercept.h>
 
 #define USE_CHILITAGS_DEFAULT_PARAM -1
 
@@ -53,14 +50,10 @@ public:
 
 private:
 
-#ifdef WITH_KNOWLEDGE
-    oro::SocketConnector connector;
-    oro::Ontology* kb;
-#endif
-
     ros::NodeHandle& rosNode;
     image_transport::ImageTransport it;
     image_transport::CameraSubscriber sub;
+    ros::Publisher world_model_pub;
 
     tf::TransformBroadcaster br;
     tf::Transform transform;
@@ -68,6 +61,7 @@ private:
     image_geometry::PinholeCameraModel cameramodel;
     cv::Mat cameraMatrix, distCoeffs;
     bool firstUncalibratedImage;
+    bool gotCameraInfo;
 
     cv::Mat inputImage;
     chilitags::Chilitags3D chilitags3d;
@@ -77,5 +71,7 @@ private:
 
     void findMarkers(const sensor_msgs::ImageConstPtr& msg,
                      const sensor_msgs::CameraInfoConstPtr& camerainfo);
+
+    void publishPercept(const std::string& object_name, tf::Transform& transform);
 };
 

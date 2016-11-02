@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="hector_object_tracker" type="object_tracker" name="object_tracker" output="screen">
+      <param name="project_objects" type="bool" value="false" />
+      <param name="angle_variance" type="double" value="0.121846968"/>
+      <param name="publish_interval" type="double" value="1.0" />
+      <rosparam>
+        chilli_objects:
+          active_support: 1.0
+          marker_color: [0.0, 0.0, 0.8]
+      </rosparam>
+      <remap from="visualization_marker" to="worldmodel/visualization_marker" />
+      <remap from="visualization_marker_array" to="worldmodel/visualization_marker_array" />
+    </node>
+</launch>
+
