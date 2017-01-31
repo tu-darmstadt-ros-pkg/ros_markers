@@ -14,8 +14,8 @@
 # This simple declaration allows to define name aliases for markers. 'marker'
 # and 'size' are the only two mandatory fields.
 myobject1:
-    - marker: 0
-      size: 20
+    - marker: 21
+      size: 28.5
 
 # The second object also has a single marker, but translated and rotated.  The
 # origin of 'myobject2' is will be 10 units *below* the marker, on the object's X
@@ -23,25 +23,46 @@ myobject1:
 # Rotations must be specified in degrees as XYZ Euler rotations, ie a rotation
 # on the X axis followed by a rotation on the Y axis, followed by a rotation on
 # the Z axis.
-myobject2:
-    - marker: 1
-      size: 30
-      translation: [10., 0., 0.]
-      rotation: [0., 0., 90.]
+#myobject2:
+#    - marker: 1
+#      size: 30
+#      translation: [10., 0., 0.]
+#      rotation: [0., 0., 90.]
 
 # The third object features 3 markers, of various size, and at various positions.
 # Here, the rotation is omitted (defaults to [0.,0.,0.]).
 # If a marker sets the option 'keep' to 'true', the marker 3D position is
 # returned besides the object.
-myobject3:
-    - marker: 2
-      size: 20
-      translation: [-50., -100., 0.0]
-      keep: true
-    - marker: 3
-      size: 30
-      translation: [50., -100., 0.0]
-    - marker: 4
-      size: 30
-      translation: [50., 100., 0.0]
-
+pickup_object:
+    - tag: 20
+      size: 28.5
+      translation: [-15.0, -50.0, -15.0]
+      rotation: [0., 0., 0.]
+    - tag: 19
+      size: 28.5
+      translation: [-15.0, 20.0, -15.0]
+      rotation: [0., 0., 0.]
+    - tag: 22
+      size: 28.5
+      translation: [-15.0, -50.0, 15.0]
+      rotation: [0., 90., 0.]
+    - tag: 26
+      size: 28.5
+      translation: [-15.0, 20.0, 15.0]
+      rotation: [0., 90., 0.]
+    - tag: 15
+      size: 28.5
+      translation: [15.0, -50.0, -15.0]
+      rotation: [0., -90., 0.]
+    - tag: 16
+      size: 28.5
+      translation: [15.0, 20.0, -15.0]
+      rotation: [0., -90., 0.]
+    - tag: 29
+      size: 28.5
+      translation: [15.0, -50.0, 15.0]
+      rotation: [0., -180., 0.]
+    - tag: 21
+      size: 28.5
+      translation: [15.0, 20.0, 15.0]
+      rotation: [0., -180., 0.]
