@@ -10,11 +10,13 @@ find_package(catkin REQUIRED COMPONENTS
         cv_bridge 
         image_transport 
         image_geometry 
-        nodelet)
+        nodelet
+        chilitags
+)
 
 ## System dependencies
 find_package(OpenCV REQUIRED)
-find_package(chilitags REQUIRED)
+#find_package(chilitags REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
@@ -53,6 +55,8 @@ set(LIBS
     ${OpenCV_LIBRARIES}
     ${chilitags_LIBRARIES}
     )
+    
+MESSAGE(WARNING "chilitags_libs:         " ${chilitags_LIBRARIES} )
 
 if (WITH_KNOWLEDGE)
 
