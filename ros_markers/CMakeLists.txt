@@ -56,8 +56,6 @@ set(LIBS
     ${chilitags_LIBRARIES}
     )
     
-MESSAGE(WARNING "chilitags_libs:         " ${chilitags_LIBRARIES} )
-
 if (WITH_KNOWLEDGE)
 
     add_definitions(-DWITH_KNOWLEDGE)
