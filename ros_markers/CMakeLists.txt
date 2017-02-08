@@ -11,12 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
         image_transport 
         image_geometry 
         nodelet
-        chilitags
+        #chilitags
 )
 
 ## System dependencies
 find_package(OpenCV REQUIRED)
-#find_package(chilitags REQUIRED)
+find_package(chilitags REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
