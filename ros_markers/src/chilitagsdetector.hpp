@@ -10,6 +10,7 @@
 // ROS
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
 #include <image_transport/image_transport.h>
 #include <image_geometry/pinhole_camera_model.h>
 #include <cv_bridge/cv_bridge.h>
@@ -49,7 +50,8 @@ public:
     ChilitagsDetector(ros::NodeHandle& rosNode,
                       const std::string& configFilename = "",
                       bool omitOtherTags = false,
-                      double tagSize = USE_CHILITAGS_DEFAULT_PARAM);
+                      double tagSize = USE_CHILITAGS_DEFAULT_PARAM,
+                      std::string tf_parent_frame = "");
 
 private:
 
@@ -64,6 +66,8 @@ private:
 
     tf::TransformBroadcaster br;
     tf::Transform transform;
+    std::string tf_parent_frame;
+    tf::TransformListener tf_listener;
 
     image_geometry::PinholeCameraModel cameramodel;
     cv::Mat cameraMatrix, distCoeffs;

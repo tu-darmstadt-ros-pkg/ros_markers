@@ -11,10 +11,11 @@ using namespace cv;
 ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
                                      const string& configFilename,
                                      bool omitOtherTags,
-                                     double tagSize) :
+                                     double tagSize, string tf_parent_frame) :
             rosNode(rosNode),
             it(rosNode),
             firstUncalibratedImage(true),
+            tf_parent_frame(tf_parent_frame),
 #ifdef WITH_KNOWLEDGE
             connector("localhost", "6969"),
 #endif
@@ -38,6 +39,8 @@ ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
 
     if(tagSize!=USE_CHILITAGS_DEFAULT_PARAM)
         chilitags3d.setDefaultTagSize(tagSize); // use specified value
+
+    chilitags3d.getChilitags().setFilter(0, 0);
 
 }
 
@@ -88,7 +91,7 @@ void ChilitagsDetector::findMarkers(const sensor_msgs::ImageConstPtr& msg,
         ********************************************************************/
 
     auto foundObjects = chilitags3d.estimate(inputImage);
-    ROS_INFO_STREAM(foundObjects.size() << " objects found.");
+    ROS_DEBUG_STREAM(foundObjects.size() << " objects found.");
 
     /****************************************************************
     *                Publish TF transforms                          *
@@ -105,11 +108,41 @@ void ChilitagsDetector::findMarkers(const sensor_msgs::ImageConstPtr& msg,
         setROSTransform(kv.second, 
                         transform);
 
-        br.sendTransform(
-                tf::StampedTransform(transform, 
-                                        ros::Time::now() + ros::Duration(TRANSFORM_FUTURE_DATING), 
-                                        cameramodel.tfFrame(),
-                                        kv.first));
+        tf::StampedTransform stamped_transform = tf::StampedTransform(transform,
+                                                                      msg->header.stamp + ros::Duration(TRANSFORM_FUTURE_DATING),
+                                                                      cameramodel.tfFrame(),
+                                                                      kv.first);
+
+        if (tf_parent_frame == "") {
+          br.sendTransform(stamped_transform);
+        } else {
+          tf::StampedTransform cam_to_parent;
+          if (tf_listener.waitForTransform(tf_parent_frame,
+                                           cameramodel.tfFrame(),
+                                           stamped_transform.stamp_,
+                                           ros::Duration(1.0)))
+          {
+            try {
+              tf_listener.lookupTransform(tf_parent_frame,
+                                          cameramodel.tfFrame(),
+                                          stamped_transform.stamp_,
+                                          cam_to_parent);
+            } catch (tf::TransformException ex){
+              ROS_WARN("%s",ex.what());
+              return;
+            }
+          } else {
+            ROS_WARN_STREAM_THROTTLE(1, "Timed out waiting for transform from " << tf_parent_frame << " to " << cameramodel.tfFrame() << ". This message is throttled.");
+            return;
+          }
+
+          tf::Transform final_transform = cam_to_parent * stamped_transform; // Transform to desired frame here
+          tf::StampedTransform final_stamped_transform = tf::StampedTransform(final_transform,
+                                                                     stamped_transform.stamp_,
+                                                                     tf_parent_frame,
+                                                                     kv.first);
+          br.sendTransform(final_stamped_transform);
+        }
     }
 
 #ifdef WITH_KNOWLEDGE

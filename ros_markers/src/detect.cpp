@@ -14,6 +14,8 @@ int main(int argc, char* argv[])
     // load parameters
     string configFilename;
     _private_node.param<string>("markers_configuration", configFilename, "");
+    string tfParentFrame;
+    _private_node.param<string>("tf_parent_frame", tfParentFrame, "");
     double defaultTagSize;
     _private_node.param<double>("default_marker_size", defaultTagSize, USE_CHILITAGS_DEFAULT_PARAM);
     bool omitOtherTags;
@@ -27,7 +29,7 @@ int main(int argc, char* argv[])
     }
 
     // initialize the detector by subscribing to the camera video stream
-    ChilitagsDetector detector(rosNode, configFilename, omitOtherTags,defaultTagSize);
+    ChilitagsDetector detector(rosNode, configFilename, omitOtherTags, defaultTagSize, tfParentFrame);
     ROS_INFO("ros_markers is ready. Marker locations will be published on TF when detected.");
     ros::spin();
 
