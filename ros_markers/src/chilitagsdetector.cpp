@@ -40,8 +40,8 @@ ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
     if(tagSize!=USE_CHILITAGS_DEFAULT_PARAM)
         chilitags3d.setDefaultTagSize(tagSize); // use specified value
 
-    chilitags3d.getChilitags().setFilter(0, 0);
-
+    //chilitags3d.setPersistence(0.0);
+    //chilitags3d.enableFilter(false);
 }
 
 
@@ -90,7 +90,9 @@ void ChilitagsDetector::findMarkers(const sensor_msgs::ImageConstPtr& msg,
         *                      Markers detection                           *
         ********************************************************************/
 
-    auto foundObjects = chilitags3d.estimate(inputImage);
+    auto foundObjects = chilitags3d.estimate(inputImage, chilitags::Chilitags::TRACK_AND_DETECT);
+    //auto foundObjects = chilitags3d.estimate(inputImage);
+
     ROS_DEBUG_STREAM(foundObjects.size() << " objects found.");
 
     /****************************************************************
