@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
         image_transport 
         image_geometry 
         nodelet
+        ros_markers_msgs
         #chilitags
 )
 
@@ -28,10 +29,11 @@ find_package(chilitags REQUIRED)
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
   INCLUDE_DIRS src
-#  LIBRARIES ros_markers
+  LIBRARIES ros_markers
   CATKIN_DEPENDS 
     tf
     nodelet
+    ros_markers_msgs
   DEPENDS OpenCV
   LIBRARIES 
 )
@@ -65,6 +67,9 @@ if (WITH_KNOWLEDGE)
 
 endif()
 
+add_library(ros_markers src/chilitagsdetector.cpp src/chilitagsdetector.hpp)
+add_dependencies(ros_markers ${catkin_EXPORTED_TARGETS})
+target_link_libraries(ros_markers ${LIBS})
 
 add_executable(detect src/chilitagsdetector.cpp src/detect.cpp)
 target_link_libraries(detect ${LIBS})
@@ -78,7 +83,7 @@ target_link_libraries(markers_nodelet ${LIBS})
 ## Install ##
 #############
 
-install(TARGETS detect markers_nodelet
+install(TARGETS detect markers_nodelet ros_markers
    ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
    RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

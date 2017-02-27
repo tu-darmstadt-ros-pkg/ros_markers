@@ -1,0 +1,15 @@
+# Action for activating docking. Uses two messages for request/response
+# to allow for easy switch to using a service or standard topic interface
+
+# REQUEST
+DockingRequest request
+
+---
+
+# RESPONSE
+DockingOutcome outcome
+
+---
+
+# FEEDBACK
+string status
