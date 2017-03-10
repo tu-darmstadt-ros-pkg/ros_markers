@@ -51,7 +51,8 @@ public:
                       const std::string& configFilename = "",
                       bool omitOtherTags = false,
                       double tagSize = USE_CHILITAGS_DEFAULT_PARAM,
-                      std::string tf_parent_frame = "");
+                      std::string tf_parent_frame = "", int persistance = -1.0,
+                      double filterGain = -1.0);
 
 private:
 

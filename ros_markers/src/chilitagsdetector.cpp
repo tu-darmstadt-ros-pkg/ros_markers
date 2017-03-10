@@ -11,7 +11,7 @@ using namespace cv;
 ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
                                      const string& configFilename,
                                      bool omitOtherTags,
-                                     double tagSize, string tf_parent_frame) :
+                                     double tagSize, string tf_parent_frame, int persistance, double filterGain) :
             rosNode(rosNode),
             it(rosNode),
             firstUncalibratedImage(true),
@@ -39,6 +39,9 @@ ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
 
     if(tagSize!=USE_CHILITAGS_DEFAULT_PARAM)
         chilitags3d.setDefaultTagSize(tagSize); // use specified value
+
+
+    chilitags3d.getChilitags().setFilter(persistance, filterGain);
 
     //chilitags3d.setPersistence(0.0);
     //chilitags3d.enableFilter(false);
