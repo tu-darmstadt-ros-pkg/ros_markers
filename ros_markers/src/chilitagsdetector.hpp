@@ -72,6 +72,6 @@ private:
     void findMarkers(const sensor_msgs::ImageConstPtr& msg,
                      const sensor_msgs::CameraInfoConstPtr& camerainfo);
 
-    void publishPercept(const std::string& object_name, tf::Transform& transform);
+    void publishPercept(const std::string& object_name, tf::Transform& transform, const ros::Time& detection_time);
 };
 

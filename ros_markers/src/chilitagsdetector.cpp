@@ -48,7 +48,7 @@ void ChilitagsDetector::setROSTransform(Matx44d trans, tf::Transform& transform)
     transform.setRotation(qrot);
 }
 
-void ChilitagsDetector::publishPercept(const std::string& object_name, tf::Transform& transform){
+void ChilitagsDetector::publishPercept(const std::string& object_name, tf::Transform& transform, const ros::Time& detection_time){
     hector_worldmodel_msgs::PosePercept pp_msg;
     pp_msg.header.frame_id = cameramodel.tfFrame();
     pp_msg.header.stamp = ros::Time::now();
@@ -112,11 +112,11 @@ void ChilitagsDetector::findMarkers(const sensor_msgs::ImageConstPtr& msg,
 
         br.sendTransform(
                 tf::StampedTransform(transform, 
-                                        ros::Time::now() + ros::Duration(TRANSFORM_FUTURE_DATING), 
+                                        msg->header.stamp + ros::Duration(TRANSFORM_FUTURE_DATING), 
                                         cameramodel.tfFrame(),
                                         kv.first));
 
-        publishPercept(kv.first, transform);
+        publishPercept(kv.first, transform, msg->header.stamp);
     }
 
 

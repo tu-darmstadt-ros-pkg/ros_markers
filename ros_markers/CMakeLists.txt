@@ -11,10 +11,12 @@ find_package(catkin REQUIRED COMPONENTS
         image_transport 
         image_geometry 
         nodelet
-        chilitags_catkin)
+        hector_worldmodel_msgs
+        )
 
 ## System dependencies
 find_package(OpenCV REQUIRED)
+find_package(chilitags REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
@@ -30,6 +32,7 @@ catkin_package(
   CATKIN_DEPENDS 
     tf
     nodelet
+    hector_worldmodel_msgs
   DEPENDS OpenCV
   LIBRARIES 
 )
@@ -44,13 +47,14 @@ option (WITH_KNOWLEDGE "Add support for exporting to a KB-API knowledge base" OF
 ## Build ##
 ###########
 
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS} ${chilitags_INCLUDE_DIR})
 
 add_definitions(-std=c++11)
 
 set(LIBS 
     ${catkin_LIBRARIES}
     ${OpenCV_LIBRARIES}
+    ${chilitags_LIBRARIES}
     )
 
 if (WITH_KNOWLEDGE)
