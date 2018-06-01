@@ -30,7 +30,8 @@ ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
     if(tagSize!=USE_CHILITAGS_DEFAULT_PARAM)
         chilitags3d.setDefaultTagSize(tagSize); // use specified value
         
-    chilitags3d.getChilitags().setFilter(0, 0.0);
+    chilitags3d.getChilitags().setFilter(0, 0.0f);
+    chilitags3d.enableFilter(false);
 
 }
 
