@@ -99,7 +99,7 @@ void ChilitagsDetector::findMarkers(const sensor_msgs::ImageConstPtr& msg,
     ********************************************************************/
 
     auto foundObjects = chilitags3d.estimate(inputImage, chilitags::Chilitags::TRACK_AND_DETECT);
-    ROS_INFO_STREAM(foundObjects.size() << " objects found.");
+    ROS_DEBUG_STREAM(foundObjects.size() << " objects found.");
 
     /****************************************************************
     *                Publish TF transforms                          *
