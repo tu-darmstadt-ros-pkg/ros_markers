@@ -55,7 +55,7 @@ void ChilitagsDetector::publishPercept(const std::string& object_name, tf::Trans
     hector_worldmodel_msgs::PosePercept pp_msg;
     pp_msg.header.frame_id = cameramodel.tfFrame();
     pp_msg.header.stamp = ros::Time::now();
-    pp_msg.info.class_id = "chilli_objects";
+    pp_msg.info.class_id = "chili_objects";
     pp_msg.info.class_support = 1.0;
     pp_msg.info.name = object_name;
     pp_msg.info.object_id = object_name;

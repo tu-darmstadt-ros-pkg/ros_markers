@@ -5,7 +5,7 @@
       <param name="angle_variance" type="double" value="0.121846968"/>
       <param name="publish_interval" type="double" value="1.0" />
       <rosparam>
-        chilli_objects:
+        chili_objects:
           active_support: 1.0
           marker_color: [0.0, 0.0, 0.8]
       </rosparam>
