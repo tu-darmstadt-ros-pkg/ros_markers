@@ -63,11 +63,10 @@ private:
     bool firstUncalibratedImage;
     bool gotCameraInfo;
 
-    cv::Mat inputImage;
     chilitags::Chilitags3D chilitags3d;
     std::set<std::string> objectsSeen;
 
-    void setROSTransform(cv::Matx44d trans, tf::Transform& transform);
+    void setROSTransform(const cv::Matx44d& trans, tf::Transform& transform);
 
     void findMarkers(const sensor_msgs::ImageConstPtr& msg,
                      const sensor_msgs::CameraInfoConstPtr& camerainfo);

@@ -21,7 +21,7 @@ ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
 {
 
     sub = it.subscribeCamera("image", 1, &ChilitagsDetector::findMarkers, this);
-    world_model_pub = rosNode.advertise<hector_worldmodel_msgs::PosePercept>("worldmodel/pose_percept", 5);
+    world_model_pub = rosNode.advertise<hector_worldmodel_msgs::PosePercept>("worldmodel/pose_percept", 10);
 
     if(!configFilename.empty()) {
     	chilitags3d.readTagConfiguration(configFilename, omitOtherTags);
@@ -36,11 +36,11 @@ ChilitagsDetector::ChilitagsDetector(ros::NodeHandle& rosNode,
 }
 
 
-void ChilitagsDetector::setROSTransform(Matx44d trans, tf::Transform& transform)
+void ChilitagsDetector::setROSTransform(const Matx44d& trans, tf::Transform& transform)
 {
-    transform.setOrigin( tf::Vector3( trans(0,3) / 1000,
-                                    trans(1,3) / 1000,
-                                    trans(2,3) / 1000) );
+    transform.setOrigin( tf::Vector3( trans(0,3) / 1000.0,
+                                      trans(1,3) / 1000.0,
+                                      trans(2,3) / 1000.0) );
 
     tf::Quaternion qrot;
     tf::Matrix3x3 mrot(
@@ -54,7 +54,7 @@ void ChilitagsDetector::setROSTransform(Matx44d trans, tf::Transform& transform)
 void ChilitagsDetector::publishPercept(const std::string& object_name, tf::Transform& transform, const ros::Time& detection_time){
     hector_worldmodel_msgs::PosePercept pp_msg;
     pp_msg.header.frame_id = cameramodel.tfFrame();
-    pp_msg.header.stamp = ros::Time::now();
+    pp_msg.header.stamp = detection_time;
     pp_msg.info.class_id = "chili_objects";
     pp_msg.info.class_support = 1.0;
     pp_msg.info.name = object_name;
@@ -89,16 +89,15 @@ void ChilitagsDetector::findMarkers(const sensor_msgs::ImageConstPtr& msg,
         gotCameraInfo = true;
     }
 
-    // hopefully no copy here:
-    //  - assignement operator of cv::Mat does not copy the data
-    //  - toCvShare does no copy if the default (source) encoding is used.
-    inputImage = cv_bridge::toCvShare(msg)->image; 
 
     /********************************************************************
     *                      Markers detection                           *
     ********************************************************************/
 
-    auto foundObjects = chilitags3d.estimate(inputImage, chilitags::Chilitags::TRACK_AND_DETECT);
+    // hopefully no copy here:
+    //  - toCvShare does no copy if the default (source) encoding is used.
+    auto foundObjects = chilitags3d.estimate(cv_bridge::toCvShare(msg)->image,
+                                             chilitags::Chilitags::TRACK_AND_DETECT);
     ROS_DEBUG_STREAM(foundObjects.size() << " objects found.");
 
     /****************************************************************
